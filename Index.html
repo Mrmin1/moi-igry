@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MiniMrGAMES — Windows XP</title>
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;font-family:Tahoma,Verdana,Arial,sans-serif;font-size:12px}
+/* --- Обои Bliss (XP) --- */
+#desktop{position:fixed;inset:0 0 32px 0;background:
+ radial-gradient(ellipse 90% 55% at 50% 0%, #7db9e8 0%, #3a8fd9 35%, #2f7fc9 60%, #5aa33a 60.2%, #6ab84a 75%, #3f8f2e 100%);
+ overflow:hidden;user-select:none}
+#desktop:before{content:"";position:absolute;left:-10%;top:6%;width:38%;height:18%;background:#fff;border-radius:50%;opacity:.85;filter:blur(6px)}
+#desktop:after{content:"";position:absolute;left:55%;top:2%;width:45%;height:16%;background:#fff;border-radius:50%;opacity:.7;filter:blur(8px)}
+#hill{position:absolute;left:0;right:0;bottom:0;height:38%;background:linear-gradient(180deg,#7cc24a 0%,#4da52e 35%,#2e7d1e 100%);border-radius:50% 50% 0 0/90px 90px 0 0}
+/* --- Иконки рабочего стола --- */
+#icons{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:16px;flex-wrap:wrap;max-height:calc(100% - 20px);z-index:2}
+.icon{width:84px;text-align:center;cursor:pointer;padding:6px 2px;border:1px dotted transparent;border-radius:2px}
+.icon.selected{background:rgba(255,255,255,.25);border-color:#fff}
+.icon .logo{width:48px;height:48px;margin:0 auto 5px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;text-shadow:0 2px 3px rgba(0,0,0,.4);box-shadow:inset 0 -8px 14px rgba(0,0,0,.25),0 3px 6px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.5)}
+.icon span{display:block;color:#fff;text-shadow:1px 1px 2px #000;font-size:12px;line-height:1.2}
+.icon small{display:block;color:#e8f4ff;text-shadow:1px 1px 2px #000;font-size:10px}
+#hint{position:absolute;top:12px;right:14px;z-index:2;background:rgba(0,0,0,.35);color:#fff;padding:8px 10px;border-radius:6px;font-size:12px;max-width:260px;line-height:1.4}
+#hint b{color:#ffe28a}
+/* --- Панель задач XP --- */
+#taskbar{position:fixed;left:0;right:0;bottom:0;height:32px;background:linear-gradient(180deg,#0997ff 0%,#0055e5 50%,#0055e5 100%);display:flex;align-items:stretch;z-index:50;color:#fff;box-shadow:0 -2px 6px rgba(0,0,0,.3)}
+#startBtn{background:linear-gradient(180deg,#5ad84a,#1f9d2a 50%,#0f7a1a);border:0;border-radius:0 12px 12px 0;color:#fff;font-style:italic;font-weight:700;font-size:15px;padding:0 22px 0 14px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+#taskbar .tasks{flex:1;display:flex;gap:4px;align-items:center;padding:0 8px;overflow:hidden}
+.taskBtn{background:#3a7bd5;border:1px solid #1c4fa0;color:#fff;padding:4px 10px;border-radius:3px;cursor:pointer;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#clock{background:linear-gradient(180deg,#19b2f5,#0a7ad1);padding:0 14px;display:flex;align-items:center;gap:8px;font-size:12px}
+#addBtn{background:#ff9c00;border:0;color:#fff;font-weight:700;padding:0 14px;cursor:pointer}
+/* --- Меню Пуск --- */
+#startMenu{position:fixed;left:0;bottom:32px;width:360px;max-width:92vw;background:#fff;border-radius:8px 8px 0 0;overflow:hidden;display:none;z-index:60;box-shadow:4px -4px 20px rgba(0,0,0,.5)}
+#startMenu.open{display:block}
+#smHead{background:linear-gradient(180deg,#0997ff,#0055e5);color:#fff;padding:14px 12px;font-size:18px;font-weight:700}
+#smBody{display:flex;min-height:260px}#smLeft{flex:1;padding:8px}#smRight{width:145px;background:#d3e5fa;padding:8px}
+.smItem{padding:7px 8px;cursor:pointer;border-radius:3px;display:flex;gap:8px;align-items:center}
+.smItem:hover{background:#316ac5;color:#fff}.smItem:hover small{color:#fff}
+.smItem small{display:block;color:#808080}
+#smFoot{background:linear-gradient(180deg,#0997ff,#0055e5);display:flex;justify-content:flex-end;gap:10px;padding:8px;color:#fff}
+#smFoot button{background:none;border:0;color:#fff;cursor:pointer;font-weight:700}
+/* --- Окно XP --- */
+.win{position:fixed;left:3%;top:3%;width:94%;height:calc(94% - 32px);background:#ece9d8;border:2px solid #0055e5;border-radius:8px 8px 0 0;display:none;flex-direction:column;z-index:40;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.win.open{display:flex}
+.winTitle{background:linear-gradient(180deg,#0997ff,#0055e5 50%,#003c9e);color:#fff;padding:6px 8px;display:flex;align-items:center;gap:8px;font-weight:700;border-radius:6px 6px 0 0}
+.winTitle button{margin-left:auto;background:#e81123;color:#fff;border:1px solid #fff;border-radius:3px;width:24px;height:22px;cursor:pointer;font-weight:700}
+.winTitle .min{background:#ff9c00}
+.winBody{flex:1;overflow:auto;padding:0;background:#fff}
+.winBody iframe{width:100%;height:100%;border:0;display:block}
+#dropOverlay{position:fixed;inset:0 0 32px 0;background:rgba(0,85,229,.55);display:none;align-items:center;justify-content:center;z-index:100;color:#fff;font-size:28px;font-weight:700;text-align:center}
+#dropOverlay.show{display:flex}
+@media(max-width:600px){#hint{display:none}#startMenu{width:92vw}}
+</style></head><body>
+<div id="desktop"><div id="hill"></div>
+<div id="icons"></div>
+<div id="hint"><b>MiniMrGAMES</b> — Windows XP<br>Двойной клик — открыть игру на весь экран.<br>Перетащи <b>.html файл игры</b> сюда — она появится на рабочем столе.</div>
+</div>
+<div id="dropOverlay">📥 Отпусти файл — игра появится<br><small style="font-size:16px">.html файл игры</small></div>
+
+<div id="startMenu"><div id="smHead">👤 IEUser<br><small style="font-size:12px;font-weight:400">MiniMrGAMES</small></div>
+<div id="smBody"><div id="smLeft"><div id="smGames"></div><div class="smItem" onclick="document.getElementById('fileInput').click()">➕ <div><b>Добавить игру…</b><small>Выбрать .html файл</small></div></div></div>
+<div id="smRight"><div class="smItem" onclick="alert('Это демо-рабочий стол. Файлы игр хранятся локально в браузере.')">🖥 Мой компьютер</div><div class="smItem" onclick="alert('Библиотека: все игры — это иконки на рабочем столе.')">📁 Мои документы</div><div class="smItem" onclick="alert('MiniMrGAMES — твоя библиотека мини-игр в стиле Windows XP')">ℹ️ О программе</div></div></div>
+<div id="smFoot"><button onclick="alert('До свидания! 👋')">⏻ Выключить</button><button onclick="closeStart()">Закрыть</button></div></div>
+
+<div class="win" id="gameWin"><div class="winTitle"><span id="winTitle">Игра</span><button class="min" onclick="closeWin()" title="Свернуть">—</button><button onclick="closeWin()">✕</button></div><div class="winBody" id="winBody"></div></div>
+
+<div id="taskbar"><button id="startBtn" onclick="toggleStart()">🪟 Пуск</button><div class="tasks" id="tasks"></div><button id="addBtn" onclick="document.getElementById('fileInput').click()">+ Игра</button><div id="clock">🕐 <span id="clockTime">--:--</span></div></div>
+<input type="file" id="fileInput" accept=".html,.htm" hidden>
+
+<script src="games.js"></script>
+<script>
+// ===== MiniMrGAMES для Windows XP =====
+// Как добавить игру в GitHub (навсегда):
+// 1) Кинь файл игры рядом с index.html, например my-game.html
+// 2) Открой games.js и добавь ОДНУ строку:
+//    {name:"Моя игра", file:"my-game.html", color:"#e91e63"},
+// Всё — игра появится на рабочем столе с лого на первую букву.
+// А локально можно просто перетащить .html на рабочий стол — без GitHub.
+function colorFor(name){var colors=["#e91e63","#9c27b0","#3f51b5","#009688","#ff9800","#4caf50","#f44336","#2196f3","#795548","#607d8b"];var s=0;for(var i=0;i<name.length;i++)s+=name.charCodeAt(i);return colors[s%colors.length];}
+function builtinGames(){
+ return [
+  {name:"Волшебный сад", type:"builtin", color:"#7cb342", desc:"Кликер"},
+  {name:"Steam Case Simulator", file:"steam-case.html", color:"#1b2838", desc:"Кейсы"},
+ ];
+}
+function loadGames(){
+  var list = builtinGames();
+  // games.js может переопределить / дополнить список
+  try{ if(window.USER_GAMES && window.USER_GAMES.length) list = list.concat(window.USER_GAMES); }catch(e){}
+  // игры, добавленные перетаскиванием (localStorage)
+  try{ var extra = JSON.parse(localStorage.getItem("minimr_xp_games")||"[]"); list = list.concat(extra); }catch(e){}
+  return list;
+}
+function render(){
+  var games = loadGames(); window._games = games;
+  var icons = document.getElementById("icons"); icons.innerHTML="";
+  games.forEach(function(g,i){
+    var d=document.createElement("div"); d.className="icon"; d.dataset.i=i;
+    d.innerHTML='<div class="logo" style="background:'+(g.color||colorFor(g.name))+'">'+g.name.trim()[0].toUpperCase()+'</div><span>'+g.name+'</span><small>'+(g.desc||"Игра")+'</small>';
+    d.onclick=function(){document.querySelectorAll(".icon").forEach(function(x){x.classList.remove("selected")}); d.classList.add("selected");};
+    d.ondblclick=function(){openGame(i);};
+    icons.appendChild(d);
+  });
+  var sm=document.getElementById("smGames"); sm.innerHTML="";
+  games.forEach(function(g,i){var r=document.createElement("div"); r.className="smItem"; r.innerHTML="🕹 <div><b>"+g.name+"</b><small>"+(g.desc||"Игра")+"</small></div>"; r.onclick=function(){closeStart(); openGame(i);}; sm.appendChild(r);});
+}
+function gardenHTML(){
+ return '<div style="font-family:Tahoma;text-align:center;padding:30px;background:linear-gradient(180deg,#fff8e1,#c8e6c9);min-height:100%"><h1 style="font-size:36px">🌻 Волшебный сад</h1><p>Кликай по солнцу и собирай монеты!</p><div id="sun" style="font-size:110px;cursor:pointer;user-select:none">🌻</div><p style="font-size:24px">Монет: <b id="coins">0</b> • Уровень: <b id="lvl">1</b></p><button onclick="buy()" style="padding:10px 18px;font-size:16px;background:#4caf50;color:#fff;border:0;border-radius:6px;cursor:pointer">🌱 Улучшить сад (+10/клик) — 50 монет</button><p id="msg"></p><script>var c=0,per=1;document.getElementById("sun").onclick=function(){c+=per;upd()};function upd(){document.getElementById("coins").textContent=c;document.getElementById("lvl").textContent=1+Math.floor(c/100)}function buy(){if(c>=50){c-=50;per+=10;document.getElementById("msg").textContent="Сад улучшен! Теперь +"+per+" за клик";upd()}else document.getElementById("msg").textContent="Не хватает монет!"}<\/script></div>';
+}
+function openGame(i){
+  var g=window._games[i]; if(!g) return;
+  var win=document.getElementById("gameWin"); win.classList.add("open");
+  document.getElementById("winTitle").textContent="🕹 "+g.name+" — MiniMrGAMES";
+  document.getElementById("tasks").innerHTML='<button class="taskBtn" onclick="document.getElementById(\'gameWin\').classList.add(\'open\')">🕹 '+g.name+'</button>';
+  var body=document.getElementById("winBody");
+  if(g.type==="builtin" && g.name==="Волшебный сад"){ body.innerHTML=gardenHTML(); }
+  else if(g.content){ // игра из перетаскивания, хранится в localStorage
+    var blob=new Blob([g.content],{type:"text/html"}); body.innerHTML='<iframe src="'+URL.createObjectURL(blob)+'"></iframe>';
+  } else if(g.file){ body.innerHTML='<iframe src="'+encodeURI(g.file)+'"></iframe>'; }
+  else { body.innerHTML='<p style="padding:20px">Файл игры не найден: <b>'+(g.file||"")+'</b><br>Проверь, что файл лежит рядом с index.html и запись есть в games.js</p>'; }
+}
+function closeWin(){document.getElementById("gameWin").classList.remove("open"); document.getElementById("tasks").innerHTML="";}
+function toggleStart(){document.getElementById("startMenu").classList.toggle("open");}
+function closeStart(){document.getElementById("startMenu").classList.remove("open");}
+document.addEventListener("click",function(e){if(!e.target.closest("#startMenu") && !e.target.closest("#startBtn")) closeStart();});
+function tick(){var d=new Date(); document.getElementById("clockTime").textContent=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+setInterval(tick,1000); tick();
+// --- Добавление игры перетаскиванием / выбором файла ---
+function addGameFile(file){
+  var reader=new FileReader();
+  reader.onload=function(){
+    var name=file.name.replace(/\.html?$/i,"").replace(/[-_]/g," ").trim() || "Игра";
+    var custom=prompt("Название игры на рабочем столе:", name); if(custom===null) return; if(!custom) custom=name;
+    var extra=[]; try{extra=JSON.parse(localStorage.getItem("minimr_xp_games")||"[]");}catch(e){}
+    extra.push({name:custom, content:reader.result, color:colorFor(custom), desc:"Моя игра"});
+    try{localStorage.setItem("minimr_xp_games", JSON.stringify(extra));}catch(e){alert("Файл слишком большой для localStorage. Для больших игр используй GitHub + games.js"); return;}
+    render(); alert("Готово! Игра «"+custom+"» появилась на рабочем столе 🎮");
+  };
+  reader.readAsText(file);
+}
+document.getElementById("fileInput").addEventListener("change",function(e){if(e.target.files[0]) addGameFile(e.target.files[0]); e.target.value="";});
+var dragN=0;
+document.addEventListener("dragenter",function(e){e.preventDefault(); dragN++; document.getElementById("dropOverlay").classList.add("show");});
+document.addEventListener("dragleave",function(){dragN=Math.max(0,dragN-1); if(!dragN) document.getElementById("dropOverlay").classList.remove("show");});
+document.addEventListener("dragover",function(e){e.preventDefault();});
+document.addEventListener("drop",function(e){e.preventDefault(); dragN=0; document.getElementById("dropOverlay").classList.remove("show"); var f=e.dataTransfer.files[0]; if(f) addGameFile(f);});
+render();
+</script></body></html>
