@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Steam Case Simulator</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#1b2838;color:#c6d4df;font-family:Arial,Helvetica,sans-serif;font-size:13px}
+header{background:#171a21;height:104px;display:flex;align-items:center}.wrap{width:940px;max-width:96%;margin:0 auto}
+.logo{font-size:32px;font-weight:900;letter-spacing:2px;color:#fff}.logo span{color:#66c0f4}nav{margin-left:30px;display:flex;gap:22px;color:#b8b6b4;font-weight:700;letter-spacing:1px;font-size:13px}
+.wallet{margin-left:auto;display:flex;gap:10px;align-items:center}.bal{background:#2a475e;padding:8px 12px;border-radius:2px;color:#beee11;font-weight:700}.btn{background:#66c0f4;color:#fff;border:0;padding:8px 14px;border-radius:2px;cursor:pointer;font-weight:700}
+.sub{background:#1a2a3a;display:flex;gap:6px;padding:10px 0}.sub button{background:transparent;border:0;color:#c6d4df;padding:8px 16px;cursor:pointer;font-weight:700}.sub button.active{background:#66c0f4;color:#fff;border-radius:2px}
+h1{color:#fff}h2{color:#fff}.muted{color:#8b929a}.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.case{background:#16202d;border:1px solid #2a3f5a;border-radius:4px;overflow:hidden}.case img{width:100%;aspect-ratio:616/353;object-fit:cover;display:block;background:#000}.case-body{padding:12px}.open{width:100%;background:linear-gradient(to bottom,#a4d007,#536904);color:#fff;border:0;padding:12px;border-radius:2px;font-weight:900;cursor:pointer;font-size:14px;margin-top:10px}.open:disabled{opacity:.5}
+.roulette{border:1px solid #2a3f5a;background:#16202d;padding:14px;position:relative;overflow:hidden}.strip{display:flex;gap:10px;overflow:hidden;height:205px;position:relative}.track{display:flex;gap:10px;will-change:transform}.pointer{position:absolute;left:50%;top:8px;bottom:8px;width:3px;background:#66c0f4;z-index:5;box-shadow:0 0 12px #66c0f4}
+.card{width:240px;flex:0 0 240px;background:#2a475e;border-radius:4px;overflow:hidden;border:1px solid #2a3f5a}.card img{width:100%;aspect-ratio:616/353;object-fit:cover;display:block;background:#0a0f16;min-height:135px}.card-info{padding:8px 10px;background:#16202d}.card-info b{color:#fff;font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.price{color:#beee11;font-size:12px;font-weight:700}.badge{font-size:11px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}.grid .card{width:100%}.inv-card{position:relative}.sell{margin-top:6px;background:#66c0f4;color:#fff;border:0;padding:6px 10px;border-radius:2px;cursor:pointer;font-weight:700}
+.result{border:1px solid #66c0f4;background:#16202d;padding:14px;display:none;gap:14px;margin-top:14px}.result.show{display:flex}.result img{width:280px;aspect-ratio:616/353;object-fit:cover;border-radius:4px}
+.ach{background:#16202d;border:1px solid #2a3f5a;padding:12px;margin-bottom:10px;border-radius:4px}.ach.done{border-color:#a4d007}.bar{height:8px;background:#1b2838;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#66c0f4}
+footer{padding:30px 0;color:#8b929a;text-align:center}.filter button{margin-right:6px}select{background:#16202d;color:#fff;border:1px solid #2a3f5a;padding:6px}
+@media(max-width:700px){.cases{grid-template-columns:1fr}nav{display:none}.result{flex-direction:column}.result img{width:100%}}
+</style></head><body>
+<header><div class="wrap" style="display:flex;align-items:center"><div class="logo">STEAM<span>.</span></div><nav><span>МАГАЗИН</span><span>БИБЛИОТЕКА</span><span>СООБЩЕСТВО</span></nav><div class="wallet"><div class="bal">🪙 <span id="balance">1000</span> монет</div><button class="btn" onclick="showTab('inv')">Инвентарь</button></div></div></header>
+<div style="background:#1a2a3a"><div class="wrap sub"><button id="t-cases" class="active" onclick="showTab('cases')">Кейсы</button><button id="t-inv" onclick="showTab('inv')">Инвентарь</button><button id="t-stat" onclick="showTab('stat')">Статистика</button><button id="t-ach" onclick="showTab('ach')">Достижения</button></div></div>
+<main class="wrap">
+<section id="tab-cases">
+<h1>Кейсы</h1><p class="muted">Откройте кейс — рулетка выберет одну из 28 игр. Предмет попадёт в инвентарь, его можно продать за монеты.</p>
+<div class="cases">
+<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg" onerror="imgFallback(this,730)" referrerpolicy="no-referrer" alt="Обычный кейс"><div class="case-body"><h2 style="margin:0">Обычный кейс</h2><p class="muted">Common 55% • Uncommon 25% • Rare 12% • Epic 5% • Legendary 2% • Mythic 1%</p><p><b style="color:#beee11">100 монет</b></p><button class="open" onclick="openCase('normal',100)">Открыть кейс</button></div></div>
+<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/capsule_616x353.jpg" onerror="imgFallback(this,1091500)" referrerpolicy="no-referrer" alt="Редкий кейс"><div class="case-body"><h2 style="margin:0">Редкий кейс</h2><p class="muted">Common 30% • Uncommon 30% • Rare 22% • Epic 10% • Legendary 5% • Mythic 3%</p><p><b style="color:#beee11">500 монет</b></p><button class="open" onclick="openCase('rare',500)">Открыть кейс</button></div></div>
+<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/capsule_616x353.jpg" onerror="imgFallback(this,1245620)" referrerpolicy="no-referrer" alt="Эпический кейс"><div class="case-body"><h2 style="margin:0">Эпический кейс</h2><p class="muted">Common 8% • Uncommon 18% • Rare 30% • Epic 24% • Legendary 12% • Mythic 8%</p><p><b style="color:#beee11">2000 монет</b></p><button class="open" onclick="openCase('epic',2000)">Открыть кейс</button></div></div>
+</div>
+<div class="roulette" style="margin-top:16px"><h2 style="margin:0 0 12px">Рулетка <span style="float:right;font-size:12px;color:#8b929a" id="rouletteLabel">Нажмите «Открыть кейс»</span></h2><div class="strip"><div class="pointer"></div><div class="track" id="track"></div></div>
+<div class="result" id="result"><img id="resImg" src="" alt=""><div><h2 id="resTitle" style="margin:0"></h2><p id="resMeta"></p><p class="muted">Предмет уже в вашем инвентаре.</p><button class="btn" onclick="sellLast()">Продать за <span id="resPrice"></span> монет</button></div></div></div>
+</section>
+<section id="tab-inv" style="display:none"><h1>Инвентарь</h1><p><span id="invCount"></span> • Общая стоимость: <b style="color:#beee11" id="invTotal">0</b> монет <button class="btn" onclick="sellAll()">Продать всё</button></p><p class="filter"><button onclick="setFilter('all')">Все</button><button onclick="setFilter('Common')">Common</button><button onclick="setFilter('Uncommon')">Uncommon</button><button onclick="setFilter('Rare')">Rare</button><button onclick="setFilter('Epic')">Epic</button><button onclick="setFilter('Legendary')">Legendary</button><button onclick="setFilter('Mythic')">Mythic</button></p><div class="grid" id="invGrid"></div></section>
+<section id="tab-stat" style="display:none"><h1>Статистика</h1><div id="statBox"></div><button class="btn" onclick="resetAll()">Сбросить прогресс</button></section>
+<section id="tab-ach" style="display:none"><h1>Достижения</h1><div id="achBox"></div></section>
+</main>
+<footer>Неофициальный симулятор. Не связан с Valve. Все игры принадлежат их правообладателям.</footer>
+<script>
+var GAMES = [{"name": "Portal", "id": 400, "price": 35, "rar": "Common", "color": "#8b929a"}, {"name": "Half-Life 2", "id": 220, "price": 40, "rar": "Common", "color": "#8b929a"}, {"name": "Team Fortress 2", "id": 440, "price": 25, "rar": "Common", "color": "#8b929a"}, {"name": "Counter-Strike 2", "id": 730, "price": 30, "rar": "Common", "color": "#8b929a"}, {"name": "Left 4 Dead 2", "id": 550, "price": 45, "rar": "Common", "color": "#8b929a"}, {"name": "Garry's Mod", "id": 4000, "price": 50, "rar": "Common", "color": "#8b929a"}, {"name": "Terraria", "id": 105600, "price": 120, "rar": "Uncommon", "color": "#4caf50"}, {"name": "Stardew Valley", "id": 413150, "price": 140, "rar": "Uncommon", "color": "#4caf50"}, {"name": "Hollow Knight", "id": 367520, "price": 160, "rar": "Uncommon", "color": "#4caf50"}, {"name": "Hades", "id": 1145360, "price": 180, "rar": "Uncommon", "color": "#4caf50"}, {"name": "Undertale", "id": 391540, "price": 110, "rar": "Uncommon", "color": "#4caf50"}, {"name": "The Witcher 3: Wild Hunt", "id": 292030, "price": 350, "rar": "Rare", "color": "#2196f3"}, {"name": "Cyberpunk 2077", "id": 1091500, "price": 420, "rar": "Rare", "color": "#2196f3"}, {"name": "Red Dead Redemption 2", "id": 1174180, "price": 480, "rar": "Rare", "color": "#2196f3"}, {"name": "God of War", "id": 1593500, "price": 380, "rar": "Rare", "color": "#2196f3"}, {"name": "Sekiro: Shadows Die Twice", "id": 814380, "price": 400, "rar": "Rare", "color": "#2196f3"}, {"name": "Elden Ring", "id": 1245620, "price": 950, "rar": "Epic", "color": "#9c27b0"}, {"name": "Baldur's Gate 3", "id": 1086940, "price": 1100, "rar": "Epic", "color": "#9c27b0"}, {"name": "Black Myth: Wukong", "id": 2358720, "price": 1000, "rar": "Epic", "color": "#9c27b0"}, {"name": "Resident Evil 4", "id": 2050650, "price": 900, "rar": "Epic", "color": "#9c27b0"}, {"name": "Grand Theft Auto V", "id": 271590, "price": 3500, "rar": "Legendary", "color": "#ff9800"}, {"name": "Monster Hunter: World", "id": 582010, "price": 3200, "rar": "Legendary", "color": "#ff9800"}, {"name": "Dark Souls III", "id": 374320, "price": 3000, "rar": "Legendary", "color": "#ff9800"}, {"name": "CS2 Prime", "id": 730, "price": 9000, "rar": "Mythic", "color": "#ff2d2d"}, {"name": "Dota 2 Collector's Edition", "id": 570, "price": 9500, "rar": "Mythic", "color": "#ff2d2d"}, {"name": "Elden Ring Legendary Edition", "id": 1245620, "price": 8500, "rar": "Mythic", "color": "#ff2d2d"}, {"name": "Baldur's Gate 3 Deluxe", "id": 1086940, "price": 8000, "rar": "Legendary", "color": "#ff9800"}, {"name": "Cyberpunk 2077 Phantom Liberty", "id": 1091500, "price": 7500, "rar": "Legendary", "color": "#ff9800"}];
+var state={balance:1000,inv:[],opened:0,spent:0,earned:0,last:null};
+try{var s=localStorage.getItem('scs2'); if(s) state=JSON.parse(s);}catch(e){}
+function save(){try{localStorage.setItem('scs2',JSON.stringify(state));}catch(e){}}
+function imgUrl(id,step){var bases=["https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/"+id+"/capsule_616x353.jpg","https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/"+id+"/header.jpg","https://cdn.cloudflare.steamstatic.com/steam/apps/"+id+"/capsule_616x353.jpg","https://cdn.cloudflare.steamstatic.com/steam/apps/"+id+"/header.jpg","https://cdn.akamai.steamstatic.com/steam/apps/"+id+"/header.jpg"];return bases[step||0];}
+function imgFallback(img,id){var n=parseInt(img.dataset.fb||"1"); if(n<5){img.dataset.fb=n+1; img.src=imgUrl(id,n);} else {img.style.display="none";}}
+function cardHTML(g){return '<div class="card" style="box-shadow:0 0 0 1px '+g.color+'33"><img src="'+imgUrl(g.id,0)+'" data-fb="1" onerror="imgFallback(this,'+g.id+')" referrerpolicy="no-referrer" alt="'+g.name+'" loading="lazy"><div class="card-info"><b>'+g.name+'</b><div><span class="price">'+g.price+' монет</span> • <span class="badge" style="color:'+g.color+'">● '+g.rar+'</span></div></div></div>';}
+function showTab(t){['cases','inv','stat','ach'].forEach(function(x){document.getElementById('tab-'+x).style.display=(x===t?'block':'none');document.getElementById('t-'+x).classList.toggle('active',x===t);}); if(t==='inv') renderInv(); if(t==='stat') renderStat(); if(t==='ach') renderAch(); update();}
+function update(){document.getElementById('balance').textContent=state.balance;}
+function pick(chances){var r=Math.random()*100,acc=0; for(var i=0;i<chances.length;i++){acc+=chances[i][1]; if(r<=acc) return chances[i][0];} return 'Common';}
+function pickGame(rar){var pool=GAMES.filter(function(g){return g.rar===rar;}); return pool[Math.floor(Math.random()*pool.length)];}
+var spinning=false, filter='all';
+function openCase(type,price){
+ if(spinning) return; if(state.balance<price){alert('Не хватает монет! Продайте что-то из инвентаря.');return;}
+ spinning=true; state.balance-=price; state.spent+=price; state.opened++;
+ var chances = type==='normal' ? [['Common',55],['Uncommon',25],['Rare',12],['Epic',5],['Legendary',2],['Mythic',1]] : type==='rare' ? [['Common',30],['Uncommon',30],['Rare',22],['Epic',10],['Legendary',5],['Mythic',3]] : [['Common',8],['Uncommon',18],['Rare',30],['Epic',24],['Legendary',12],['Mythic',8]];
+ var winRar=pick(chances); var win=pickGame(winRar);
+ document.getElementById('rouletteLabel').textContent='Крутим...';
+ var track=document.getElementById('track'); var items=[];
+ for(var i=0;i<40;i++){var g=GAMES[Math.floor(Math.random()*GAMES.length)]; items.push(g);} items[32]=win;
+ track.innerHTML=items.map(cardHTML).join('');
+ track.style.transition='none'; track.style.transform='translateX(0px)';
+ requestAnimationFrame(function(){requestAnimationFrame(function(){
+   var cardW=250; var target=32*cardW - (document.querySelector('.strip').clientWidth/2 - 125);
+   track.style.transition='transform 4s cubic-bezier(0.1,0.9,0.2,1)'; track.style.transform='translateX(-'+target+'px)';
+   setTimeout(function(){
+     state.inv.push(win); state.last=win; save(); update(); spinning=false;
+     document.getElementById('rouletteLabel').textContent='Выпало: '+win.name;
+     var r=document.getElementById('result'); r.classList.add('show'); r.style.borderColor=win.color; r.style.boxShadow='0 0 25px '+win.color+'88';
+     document.getElementById('resImg').src=imgUrl(win.id,0); document.getElementById('resImg').dataset.fb=1; document.getElementById('resImg').onerror=function(){imgFallback(this,win.id);};
+     document.getElementById('resTitle').textContent='Выпало: '+win.name;
+     document.getElementById('resMeta').innerHTML='<span style="color:'+win.color+'">'+win.rar+'</span> • <span style="color:#beee11">'+win.price+' монет при продаже</span>';
+     document.getElementById('resPrice').textContent=win.price;
+     renderAch(); checkAch(win);
+   },4100);
+ });});
+}
+function setFilter(f){filter=f; renderInv();}
+function renderInv(){var grid=document.getElementById('invGrid'); var list=state.inv.filter(function(g){return filter==='all'||g.rar===filter;});
+ document.getElementById('invCount').textContent='Предметов: '+state.inv.length;
+ var total=state.inv.reduce(function(a,g){return a+g.price;},0); document.getElementById('invTotal').textContent=total;
+ if(!list.length){grid.innerHTML='<p class="muted">Пока пусто. Откройте кейс!</p>';return;}
+ grid.innerHTML=list.map(function(g,idx){return '<div class="card inv-card">'+'<img src="'+imgUrl(g.id,0)+'" data-fb="1" onerror="imgFallback(this,'+g.id+')" referrerpolicy="no-referrer" alt="'+g.name+'"><div class="card-info"><b>'+g.name+'</b><div><span class="price">'+g.price+' монет</span> • <span class="badge" style="color:'+g.color+'">● '+g.rar+'</span></div><button class="sell" onclick="sellOne('+state.inv.indexOf(g)+')">Продать</button></div></div>';}).join('');}
+function sellOne(i){var g=state.inv[i]; if(!g) return; state.inv.splice(i,1); state.balance+=g.price; state.earned+=g.price; if(state.last===g){state.last=null; var r=document.getElementById('result'); if(r) r.classList.remove('show');} save(); update(); renderInv();}
+function sellLast(){if(state.last){var i=state.inv.lastIndexOf(state.last); if(i>=0) sellOne(i);} var r=document.getElementById('result'); if(r) r.classList.remove('show');}
+function sellAll(){var t=state.inv.reduce(function(a,g){return a+g.price;},0); state.balance+=t; state.earned+=t; state.inv=[]; state.last=null; var r=document.getElementById('result'); if(r) r.classList.remove('show'); save(); update(); renderInv();}
+function renderStat(){document.getElementById('statBox').innerHTML='<p>Открыто кейсов: <b>'+state.opened+'</b></p><p>Потрачено: <b>'+state.spent+'</b></p><p>Заработано с продаж: <b>'+state.earned+'</b></p><p>Баланс: <b style="color:#beee11">'+state.balance+'</b></p><p>Предметов в инвентаре: <b>'+state.inv.length+'</b></p>';}
+function achievements(){return [{n:'Первый кейс',d:state.opened>=1,p:Math.min(100,state.opened*100)},{n:'10 кейсов',d:state.opened>=10,p:Math.min(100,state.opened*10)},{n:'50 кейсов',d:state.opened>=50,p:Math.min(100,state.opened*2)},{n:'Первая Epic',d:state.inv.some(function(g){return g.rar==='Epic'}),p:state.inv.some(function(g){return g.rar==='Epic'})?100:0},{n:'Первая Legendary',d:state.inv.some(function(g){return g.rar==='Legendary'}),p:state.inv.some(function(g){return g.rar==='Legendary'})?100:0},{n:'Первая Mythic',d:state.inv.some(function(g){return g.rar==='Mythic'}),p:state.inv.some(function(g){return g.rar==='Mythic'})?100:0},{n:'Миллионер (10000 монет)',d:state.balance>=10000,p:Math.min(100,state.balance/100)},{n:'Коллекционер (20 предметов)',d:state.inv.length>=20,p:Math.min(100,state.inv.length*5)}];}
+function renderAch(){document.getElementById('achBox').innerHTML=achievements().map(function(a){return '<div class="ach '+(a.d?'done':'')+'"><b>'+(a.d?'✅ ':'🔒 ')+a.n+'</b><div class="bar"><i style="width:'+a.p+'%"></i></div><small>'+Math.round(a.p)+'%</small></div>';}).join('');}
+function checkAch(win){var done=achievements().filter(function(a){return a.d;}); if(done.length) {} }
+function resetAll(){if(confirm('Сбросить весь прогресс?')){state={balance:1000,inv:[],opened:0,spent:0,earned:0,last:null}; save(); update(); renderInv(); renderStat(); renderAch();}}
+update(); renderInv(); renderStat(); renderAch();
+</script></body></html>
