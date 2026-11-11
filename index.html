@@ -33,6 +33,41 @@
 .winTitle button{margin-left:auto;background:#e81123;color:#fff;border:1px solid #fff;border-radius:3px;width:24px;height:22px;cursor:pointer;font-weight:700}
 .winBody{flex:1;overflow:auto;background:#fff}.winBody iframe{width:100%;height:100%;border:0;display:block}
 @media(max-width:600px){#hint{display:none}}
+
+/* ===== АДАПТИВ: Яндекс Игры стиль — ПК как ПК, телефон как телефон ===== */
+@media (min-width:769px){
+  /* ПК — как было: рабочий стол XP, иконки слева колонкой */
+  #icons{flex-direction:column}
+}
+/* МОБИЛЬНАЯ ВЕРСИЯ: ширина <=768px — это и окно ТГ на телефоне */
+@media (max-width:768px){
+  html,body{overflow:hidden}
+  #desktop{inset:0 0 52px 0}
+  #hint{display:none}
+  /* Иконки — сеткой как приложения на телефоне, а не колонкой слева */
+  #icons{top:16px;left:0;right:0;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;gap:10px;padding:0 14px;max-height:calc(100% - 20px)}
+  .icon{width:calc(25% - 10px);min-width:68px}
+  .icon .logo{width:56px;height:56px;font-size:30px;border-radius:14px}
+  .icon span{font-size:12px}
+  /* Панель задач — выше, кнопки под палец */
+  #taskbar{height:52px}
+  #startBtn{font-size:18px;padding:0 20px}
+  #clock{padding:0 12px;font-size:13px}
+  /* Меню Пуск — на весь экран телефона */
+  #startMenu{width:100%;max-width:100%;left:0;bottom:52px;border-radius:12px 12px 0 0;max-height:75vh;overflow:auto}
+  #smBody{flex-direction:column;min-height:0}
+  #smRight{width:100%;display:flex;gap:4px}
+  #smRight .smItem{flex:1;justify-content:center}
+  /* Окно игры — на весь экран телефона, без рамок XP */
+  .win{left:0;top:0;width:100%;height:calc(100% - 52px);border:0;border-radius:0}
+  .winTitle{padding:10px 10px;font-size:15px}
+  .winTitle button{width:36px;height:32px;font-size:16px}
+}
+/* Очень узкие телефоны */
+@media (max-width:380px){
+  .icon{width:calc(33.33% - 10px)}
+  #startMenu{max-height:82vh}
+}
 </style></head><body>
 <div id="desktop"><div id="hill"></div><div id="icons"></div>
 <div id="hint"><b>MiniMrGAMES</b> — Windows XP<br>Двойной клик — открыть игру.</div></div>
@@ -49,9 +84,8 @@
 function colorFor(n){var c=["#e91e63","#9c27b0","#3f51b5","#009688","#ff9800","#4caf50","#f44336","#2196f3","#795548","#607d8b"];var s=0;for(var i=0;i<n.length;i++)s+=n.charCodeAt(i);return c[s%c.length];}
 function builtinGames(){return [{name:"Волшебный сад",type:"builtin",color:"#7cb342",desc:"Кликер"},{name:"Steam Case Simulator",file:"steam-case.html",color:"#1b2838",desc:"Кейсы"}];}
 function loadGames(){var l=builtinGames();try{if(window.USER_GAMES&&window.USER_GAMES.length)l=l.concat(window.USER_GAMES);}catch(e){}return l;}
-function render(){var games=loadGames();window._games=games;var icons=document.getElementById("icons");icons.innerHTML="";games.forEach(function(g,i){var d=document.createElement("div");d.className="icon";d.innerHTML='<div class="logo" style="background:'+(g.color||colorFor(g.name))+'">'+g.name.trim()[0].toUpperCase()+'</div><span>'+g.name+'</span><small>'+(g.desc||"Игра")+'</small>';d.onclick=function(){document.querySelectorAll(".icon").forEach(function(x){x.classList.remove("selected")});d.classList.add("selected");};d.ondblclick=function(){openGame(i);};icons.appendChild(d);});var sm=document.getElementById("smGames");sm.innerHTML="";games.forEach(function(g,i){var r=document.createElement("div");r.className="smItem";r.innerHTML="🕹 <div><b>"+g.name+"</b><small>"+(g.desc||"Игра")+"</small></div>";r.onclick=function(){closeStart();openGame(i);};sm.appendChild(r);});}
-function gardenHTML(){return '<div style="font-family:Tahoma;text-align:center;padding:30px;background:linear-gradient(180deg,#fff8e1,#c8e6c9);min-height:100%"><h1 style="font-size:36px">🌻 Волшебный сад</h1><p>Кликай по солнцу и собирай монеты!</p><div id="sun" style="font-size:110px;cursor:pointer">🌻</div><p style="font-size:24px">Монет: <b id="coins">0</b></p><button onclick="buy()" style="padding:10px 18px;font-size:16px;background:#4caf50;color:#fff;border:0;border-radius:6px;cursor:pointer">🌱 Улучшить (+10/клик) — 50 монет</button><p id="msg"></p><scr'+'ipt>var c=0,per=1;document.getElementById("sun").onclick=function(){c+=per;document.getElementById("coins").textContent=c};function buy(){if(c>=50){c-=50;per+=10;document.getElementById("msg").textContent="Сад улучшен! Теперь +"+per}catch(e){}}<\/script></div>';}
-function openGame(i){var g=window._games[i];if(!g)return;var win=document.getElementById("gameWin");win.classList.add("open");document.getElementById("winTitle").textContent="🕹 "+g.name+" — MiniMrGAMES";document.getElementById("tasks").innerHTML='<button class="taskBtn">🕹 '+g.name+'</button>';var body=document.getElementById("winBody");if(g.type==="builtin"){body.innerHTML=gardenHTML();}else if(g.content){var blob=new Blob([g.content],{type:"text/html"});body.innerHTML='<iframe src="'+URL.createObjectURL(blob)+'"></iframe>';}else if(g.file){body.innerHTML='<iframe src="'+encodeURI(g.file)+'"></iframe>';}else{body.innerHTML='<p style="padding:20px">Файл не найден: <b>'+(g.file||"")+'</b></p>';}}
+function render(){var games=loadGames();window._games=games;var icons=document.getElementById("icons");icons.innerHTML="";games.forEach(function(g,i){var d=document.createElement("div");d.className="icon";d.innerHTML='<div class="logo" style="background:'+(g.color||colorFor(g.name))+'">'+g.name.trim()[0].toUpperCase()+'</div><span>'+g.name+'</span><small>'+(g.desc||"Игра")+'</small>';d.onclick=function(){document.querySelectorAll(".icon").forEach(function(x){x.classList.remove("selected")});d.classList.add("selected");if(window.matchMedia("(pointer:coarse)").matches){openGame(i);}};d.ondblclick=function(){openGame(i);};icons.appendChild(d);});var sm=document.getElementById("smGames");sm.innerHTML="";games.forEach(function(g,i){var r=document.createElement("div");r.className="smItem";r.innerHTML="🕹 <div><b>"+g.name+"</b><small>"+(g.desc||"Игра")+"</small></div>";r.onclick=function(){closeStart();openGame(i);};sm.appendChild(r);});}
+function openGame(i){var g=window._games[i];if(!g)return;var win=document.getElementById("gameWin");win.classList.add("open");document.getElementById("winTitle").textContent="🕹 "+g.name+" — MiniMrGAMES";document.getElementById("tasks").innerHTML='<button class="taskBtn">🕹 '+g.name+'</button>';var body=document.getElementById("winBody");if(g.type==="builtin"){body.innerHTML='<p style="padding:20px">Встроенная заглушка удалена. Игра должна лежать отдельным файлом, см. games.js</p>';}else if(g.content){var blob=new Blob([g.content],{type:"text/html"});body.innerHTML='<iframe src="'+URL.createObjectURL(blob)+'"></iframe>';}else if(g.file){body.innerHTML='<iframe src="'+encodeURI(g.file)+'"></iframe>';}else{body.innerHTML='<p style="padding:20px">Файл не найден: <b>'+(g.file||"")+'</b></p>';}}
 function closeWin(){document.getElementById("gameWin").classList.remove("open");document.getElementById("tasks").innerHTML="";}
 function toggleStart(){document.getElementById("startMenu").classList.toggle("open");}
 function closeStart(){document.getElementById("startMenu").classList.remove("open");}
