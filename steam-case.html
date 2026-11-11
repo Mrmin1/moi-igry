@@ -14,37 +14,6 @@ h1{color:#fff}h2{color:#fff}.muted{color:#8b929a}.cases{display:grid;grid-templa
 .ach{background:#16202d;border:1px solid #2a3f5a;padding:12px;margin-bottom:10px;border-radius:4px}.ach.done{border-color:#a4d007}.bar{height:8px;background:#1b2838;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#66c0f4}
 footer{padding:30px 0;color:#8b929a;text-align:center}.filter button{margin-right:6px}select{background:#16202d;color:#fff;border:1px solid #2a3f5a;padding:6px}
 @media(max-width:700px){.cases{grid-template-columns:1fr}nav{display:none}.result{flex-direction:column}.result img{width:100%}}
-
-/* ===== АДАПТИВ: ПК как ПК, телефон как телефон ===== */
-@media (max-width:768px){
-  header{height:auto;padding:12px 0}
-  header .wrap{flex-wrap:wrap;gap:8px}
-  nav{display:none}
-  .logo{font-size:24px}
-  .wallet{margin-left:0;width:100%;justify-content:space-between}
-  .bal{flex:1;text-align:center}
-  .sub{overflow-x:auto;white-space:nowrap}
-  .sub button{padding:10px 14px;font-size:14px;flex:0 0 auto}
-  /* Кейсы — один под другим, кнопка под палец */
-  .cases{grid-template-columns:1fr}
-  .open{padding:16px;font-size:16px;min-height:48px}
-  /* Карточки игр — 2 в ряд на телефоне */
-  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
-  .card{width:100%!important;flex:0 0 auto}
-  .card-info b{font-size:12px}
-  /* Рулетка — карточки уже, трек не вылезает */
-  .strip{height:185px}
-  .result{flex-direction:column;padding:10px}
-  .result img{width:100%!important}
-  .result .btn,.btn{min-height:44px;font-size:15px}
-  h1{font-size:22px} h2{font-size:18px}
-  .filter{overflow-x:auto;white-space:nowrap;display:flex;gap:6px}
-  .filter button{flex:0 0 auto;padding:10px 12px}
-}
-@media (max-width:380px){
-  .grid{grid-template-columns:1fr}
-  .card-info b{font-size:14px}
-}
 </style></head><body>
 <header><div class="wrap" style="display:flex;align-items:center"><div class="logo">STEAM<span>.</span></div><nav><span>МАГАЗИН</span><span>БИБЛИОТЕКА</span><span>СООБЩЕСТВО</span></nav><div class="wallet"><div class="bal">🪙 <span id="balance">1000</span> монет</div><button class="btn" onclick="showTab('inv')">Инвентарь</button></div></div></header>
 <div style="background:#1a2a3a"><div class="wrap sub"><button id="t-cases" class="active" onclick="showTab('cases')">Кейсы</button><button id="t-inv" onclick="showTab('inv')">Инвентарь</button><button id="t-stat" onclick="showTab('stat')">Статистика</button><button id="t-ach" onclick="showTab('ach')">Достижения</button></div></div>
@@ -52,12 +21,18 @@ footer{padding:30px 0;color:#8b929a;text-align:center}.filter button{margin-righ
 <section id="tab-cases">
 <h1>Кейсы</h1><p class="muted">Откройте кейс — рулетка выберет одну из 28 игр. Предмет попадёт в инвентарь, его можно продать за монеты.</p>
 <div class="cases">
-<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg" onerror="imgFallback(this,730)" referrerpolicy="no-referrer" alt="Обычный кейс"><div class="case-body"><h2 style="margin:0">Обычный кейс</h2><p class="muted">Common 55% • Uncommon 25% • Rare 12% • Epic 5% • Legendary 2% • Mythic 1%</p><p><b style="color:#beee11">100 монет</b></p><button class="open" onclick="openCase('normal',100)">Открыть кейс</button></div></div>
-<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/capsule_616x353.jpg" onerror="imgFallback(this,1091500)" referrerpolicy="no-referrer" alt="Редкий кейс"><div class="case-body"><h2 style="margin:0">Редкий кейс</h2><p class="muted">Common 30% • Uncommon 30% • Rare 22% • Epic 10% • Legendary 5% • Mythic 3%</p><p><b style="color:#beee11">500 монет</b></p><button class="open" onclick="openCase('rare',500)">Открыть кейс</button></div></div>
-<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/capsule_616x353.jpg" onerror="imgFallback(this,1245620)" referrerpolicy="no-referrer" alt="Эпический кейс"><div class="case-body"><h2 style="margin:0">Эпический кейс</h2><p class="muted">Common 8% • Uncommon 18% • Rare 30% • Epic 24% • Legendary 12% • Mythic 8%</p><p><b style="color:#beee11">2000 монет</b></p><button class="open" onclick="openCase('epic',2000)">Открыть кейс</button></div></div>
+<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg" onerror="imgFallback(this,730)" referrerpolicy="no-referrer" alt="Обычный кейс"><div class="case-body"><h2 style="margin:0">Обычный кейс</h2><p class="muted">Common 55% • Uncommon 25% • Rare 12% • Epic 5% • Legendary 2% • Mythic 1%</p><p><b style="color:#beee11">100 монет</b></p><button class="open" onclick="openCasePage('normal',100)">Открыть кейс</button></div></div>
+<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/capsule_616x353.jpg" onerror="imgFallback(this,1091500)" referrerpolicy="no-referrer" alt="Редкий кейс"><div class="case-body"><h2 style="margin:0">Редкий кейс</h2><p class="muted">Common 30% • Uncommon 30% • Rare 22% • Epic 10% • Legendary 5% • Mythic 3%</p><p><b style="color:#beee11">500 монет</b></p><button class="open" onclick="openCasePage('rare',500)">Открыть кейс</button></div></div>
+<div class="case"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/capsule_616x353.jpg" onerror="imgFallback(this,1245620)" referrerpolicy="no-referrer" alt="Эпический кейс"><div class="case-body"><h2 style="margin:0">Эпический кейс</h2><p class="muted">Common 8% • Uncommon 18% • Rare 30% • Epic 24% • Legendary 12% • Mythic 8%</p><p><b style="color:#beee11">2000 монет</b></p><button class="open" onclick="openCasePage('epic',2000)">Открыть кейс</button></div></div>
 </div>
-<div class="roulette" style="margin-top:16px"><h2 style="margin:0 0 12px">Рулетка <span style="float:right;font-size:12px;color:#8b929a" id="rouletteLabel">Нажмите «Открыть кейс»</span></h2><div class="strip"><div class="pointer"></div><div class="track" id="track"></div></div>
-<div class="result" id="result"><img id="resImg" src="" alt=""><div><h2 id="resTitle" style="margin:0"></h2><p id="resMeta"></p><p class="muted">Предмет уже в вашем инвентаре.</p><button class="btn" onclick="sellLast()">Продать за <span id="resPrice"></span> монет</button></div></div></div>
+
+</section>
+
+<section id="tab-case" style="display:none">
+<button class="btn" onclick="backToShop()">← Назад в магазин</button>
+<div id="caseHero" style="margin-top:14px"></div>
+<div class="roulette" style="margin-top:16px"><h2 style="margin:0 0 12px">Рулетка <span style="float:right;font-size:12px;color:#8b929a" id="rouletteLabel">Нажмите «Крутить»</span></h2><div class="strip"><div class="pointer"></div><div class="track" id="track"></div></div>
+<div class="result" id="result"><img id="resImg" src="" alt=""><div><h2 id="resTitle" style="margin:0"></h2><p id="resMeta"></p><p class="muted">Что делать с дропом?</p><p style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="takeDrop()" style="background:#a4d007">✅ Забрать в инвентарь</button><button class="btn" onclick="sellDrop()">💰 Продать за <span id="resPrice"></span> монет</button></p></div></div></div>
 </section>
 <section id="tab-inv" style="display:none"><h1>Инвентарь</h1><p><span id="invCount"></span> • Общая стоимость: <b style="color:#beee11" id="invTotal">0</b> монет <button class="btn" onclick="sellAll()">Продать всё</button></p><p class="filter"><button onclick="setFilter('all')">Все</button><button onclick="setFilter('Common')">Common</button><button onclick="setFilter('Uncommon')">Uncommon</button><button onclick="setFilter('Rare')">Rare</button><button onclick="setFilter('Epic')">Epic</button><button onclick="setFilter('Legendary')">Legendary</button><button onclick="setFilter('Mythic')">Mythic</button></p><div class="grid" id="invGrid"></div></section>
 <section id="tab-stat" style="display:none"><h1>Статистика</h1><div id="statBox"></div><button class="btn" onclick="resetAll()">Сбросить прогресс</button></section>
@@ -72,26 +47,48 @@ function save(){try{localStorage.setItem('scs2',JSON.stringify(state));}catch(e)
 function imgUrl(id,step){var bases=["https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/"+id+"/capsule_616x353.jpg","https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/"+id+"/header.jpg","https://cdn.cloudflare.steamstatic.com/steam/apps/"+id+"/capsule_616x353.jpg","https://cdn.cloudflare.steamstatic.com/steam/apps/"+id+"/header.jpg","https://cdn.akamai.steamstatic.com/steam/apps/"+id+"/header.jpg"];return bases[step||0];}
 function imgFallback(img,id){var n=parseInt(img.dataset.fb||"1"); if(n<5){img.dataset.fb=n+1; img.src=imgUrl(id,n);} else {img.style.display="none";}}
 function cardHTML(g){return '<div class="card" style="box-shadow:0 0 0 1px '+g.color+'33"><img src="'+imgUrl(g.id,0)+'" data-fb="1" onerror="imgFallback(this,'+g.id+')" referrerpolicy="no-referrer" alt="'+g.name+'" loading="lazy"><div class="card-info"><b>'+g.name+'</b><div><span class="price">'+g.price+' монет</span> • <span class="badge" style="color:'+g.color+'">● '+g.rar+'</span></div></div></div>';}
-function showTab(t){['cases','inv','stat','ach'].forEach(function(x){document.getElementById('tab-'+x).style.display=(x===t?'block':'none');document.getElementById('t-'+x).classList.toggle('active',x===t);}); if(t==='inv') renderInv(); if(t==='stat') renderStat(); if(t==='ach') renderAch(); update();}
+function showTab(t){['cases','inv','stat','ach','case'].forEach(function(x){document.getElementById('tab-'+x).style.display=(x===t?'block':'none');var tb=document.getElementById('t-'+x); if(tb) tb.classList.toggle('active',x===t);}); if(t==='inv') renderInv(); if(t==='stat') renderStat(); if(t==='ach') renderAch(); update();}
 function update(){document.getElementById('balance').textContent=state.balance;}
 function pick(chances){var r=Math.random()*100,acc=0; for(var i=0;i<chances.length;i++){acc+=chances[i][1]; if(r<=acc) return chances[i][0];} return 'Common';}
 function pickGame(rar){var pool=GAMES.filter(function(g){return g.rar===rar;}); return pool[Math.floor(Math.random()*pool.length)];}
 var spinning=false, filter='all';
-function openCase(type,price){
- if(spinning) return; if(state.balance<price){alert('Не хватает монет! Продайте что-то из инвентаря.');return;}
- spinning=true; state.balance-=price; state.spent+=price; state.opened++;
- var chances = type==='normal' ? [['Common',55],['Uncommon',25],['Rare',12],['Epic',5],['Legendary',2],['Mythic',1]] : type==='rare' ? [['Common',30],['Uncommon',30],['Rare',22],['Epic',10],['Legendary',5],['Mythic',3]] : [['Common',8],['Uncommon',18],['Rare',30],['Epic',24],['Legendary',12],['Mythic',8]];
- var winRar=pick(chances); var win=pickGame(winRar);
+
+var CASES={
+ normal:{name:"Обычный кейс",price:100,img:730,chances:[['Common',55],['Uncommon',25],['Rare',12],['Epic',5],['Legendary',2],['Mythic',1]],chancesText:"Common 55% • Uncommon 25% • Rare 12% • Epic 5% • Legendary 2% • Mythic 1%"},
+ rare:{name:"Редкий кейс",price:500,img:1091500,chances:[['Common',30],['Uncommon',30],['Rare',22],['Epic',10],['Legendary',5],['Mythic',3]],chancesText:"Common 30% • Uncommon 30% • Rare 22% • Epic 10% • Legendary 5% • Mythic 3%"},
+ epic:{name:"Эпический кейс",price:2000,img:1245620,chances:[['Common',8],['Uncommon',18],['Rare',30],['Epic',24],['Legendary',12],['Mythic',8]],chancesText:"Common 8% • Uncommon 18% • Rare 30% • Epic 24% • Legendary 12% • Mythic 8%"}
+};
+var currentCase=null, pendingWin=null;
+function backToShop(){ pendingWin=null; document.getElementById('result').classList.remove('show'); showTab('cases'); window.scrollTo(0,0); }
+function openCasePage(type,price){
+  currentCase=CASES[type]; if(!currentCase) return;
+  // Магазин убирается — показывается только страница кейса
+  ['cases','inv','stat','ach','case'].forEach(function(x){document.getElementById('tab-'+x).style.display=(x==='case'?'block':'none');});
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('rouletteLabel').textContent='Нажмите «Крутить»';
+  document.getElementById('track').innerHTML='';
+  document.getElementById('caseHero').innerHTML='<div class="case"><img src="'+imgUrl(currentCase.img,0)+'" data-fb="1" onerror="imgFallback(this,'+currentCase.img+')" referrerpolicy="no-referrer" alt="'+currentCase.name+'"><div class="case-body"><h2 style="margin:0">'+currentCase.name+'</h2><p class="muted">'+currentCase.chancesText+'</p><p><b style="color:#beee11">'+currentCase.price+' монет</b></p><button class="open" id="spinBtn" onclick="spinCase()">🎲 Крутить рулетку</button></div></div>';
+  window.scrollTo(0,0);
+}
+function spinCase(){
+ if(spinning||!currentCase) return;
+ var price=currentCase.price;
+ if(state.balance<price){alert('Не хватает монет! Продайте что-то из инвентаря.');return;}
+ spinning=true; pendingWin=null;
+ state.balance-=price; state.spent+=price; state.opened++;
+ document.getElementById('spinBtn').disabled=true;
+ var winRar=pick(currentCase.chances); var win=pickGame(winRar);
  document.getElementById('rouletteLabel').textContent='Крутим...';
  var track=document.getElementById('track'); var items=[];
  for(var i=0;i<40;i++){var g=GAMES[Math.floor(Math.random()*GAMES.length)]; items.push(g);} items[32]=win;
  track.innerHTML=items.map(cardHTML).join('');
  track.style.transition='none'; track.style.transform='translateX(0px)';
  requestAnimationFrame(function(){requestAnimationFrame(function(){
-   var cardW = window.innerWidth<=768 ? (document.querySelector('.card')?document.querySelector('.card').offsetWidth+10:250) : 250; var target=32*cardW - (document.querySelector('.strip').clientWidth/2 - 125);
+   var cardW=250; var target=32*cardW - (document.querySelector('.strip').clientWidth/2 - 125);
    track.style.transition='transform 4s cubic-bezier(0.1,0.9,0.2,1)'; track.style.transform='translateX(-'+target+'px)';
    setTimeout(function(){
-     state.inv.push(win); state.last=win; save(); update(); spinning=false;
+     pendingWin=win; spinning=false;
+     document.getElementById('spinBtn').disabled=false;
      document.getElementById('rouletteLabel').textContent='Выпало: '+win.name;
      var r=document.getElementById('result'); r.classList.add('show'); r.style.borderColor=win.color; r.style.boxShadow='0 0 25px '+win.color+'88';
      document.getElementById('resImg').src=imgUrl(win.id,0); document.getElementById('resImg').dataset.fb=1; document.getElementById('resImg').onerror=function(){imgFallback(this,win.id);};
@@ -102,6 +99,23 @@ function openCase(type,price){
    },4100);
  });});
 }
+function takeDrop(){
+ if(!pendingWin) return;
+ state.inv.push(pendingWin); state.last=pendingWin; save(); update();
+ var n=pendingWin.name; pendingWin=null;
+ document.getElementById('result').classList.remove('show');
+ document.getElementById('rouletteLabel').textContent='Забрано: '+n+' → в инвентаре';
+ alert('Забрано в инвентарь: '+n);
+}
+function sellDrop(){
+ if(!pendingWin) return;
+ state.balance+=pendingWin.price; state.earned+=pendingWin.price; save(); update();
+ var n=pendingWin.name, pr=pendingWin.price; pendingWin=null;
+ document.getElementById('result').classList.remove('show');
+ document.getElementById('rouletteLabel').textContent='Продано: '+n+' за '+pr+' монет';
+ alert('Продано за '+pr+' монет: '+n);
+}
+function sellLast(){ sellDrop(); }
 function setFilter(f){filter=f; renderInv();}
 function renderInv(){var grid=document.getElementById('invGrid'); var list=state.inv.filter(function(g){return filter==='all'||g.rar===filter;});
  document.getElementById('invCount').textContent='Предметов: '+state.inv.length;
