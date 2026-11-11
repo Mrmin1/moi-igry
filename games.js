@@ -5,6 +5,6 @@
 window.USER_GAMES = [
   // {name:"Моя игра", file:"my-game.html"},
 window.USER_GAMES = [
-  {name:"Волшебный сад", file:"magicgarden.html", desc:"Кликер"},
+  {name:"MagicGarden", file:"magicgarden.html", desc:"Кликер"},
   {name:"Steam Case Simulator", file:"steam-case.html", desc:"Кейсы"},
 ];
