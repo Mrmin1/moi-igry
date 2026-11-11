@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MiniMrGAMES — Windows XP</title>
 <style>
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;font-family:Tahoma,Verdana,Arial,sans-serif;font-size:12px}
@@ -68,6 +68,24 @@
   .icon{width:calc(33.33% - 10px)}
   #startMenu{max-height:82vh}
 }
+
+/* ===== ТЕЛЕФОН / ТГ: срабатывает даже если Telegram врёт про ширину ===== */
+@media (pointer:coarse), (hover:none), (max-width:1024px) and (pointer:coarse){
+  #desktop{inset:0 0 56px 0 !important}
+  #hint{display:none !important}
+  #icons{top:16px;left:0;right:0;flex-direction:row !important;flex-wrap:wrap;justify-content:flex-start;gap:10px;padding:0 14px;max-height:calc(100% - 20px)}
+  .icon{width:calc(25% - 10px) !important;min-width:68px}
+  .icon .logo{width:56px !important;height:56px !important;font-size:30px;border-radius:14px}
+  #taskbar{height:56px !important}
+  #startBtn{font-size:18px;padding:0 20px}
+  #clock{padding:0 12px;font-size:13px}
+  #startMenu{width:100% !important;max-width:100% !important;left:0;bottom:56px !important;border-radius:12px 12px 0 0;max-height:75vh;overflow:auto}
+  #smBody{flex-direction:column;min-height:0}
+  #smRight{width:100% !important;display:flex;gap:4px}
+  .win{left:0 !important;top:0 !important;width:100% !important;height:calc(100% - 56px) !important;border:0 !important;border-radius:0 !important}
+  .winTitle{padding:12px 10px !important;font-size:15px}
+  .winTitle button{width:38px !important;height:34px !important;font-size:16px}
+}
 </style></head><body>
 <div id="desktop"><div id="hill"></div><div id="icons"></div>
 <div id="hint"><b>MiniMrGAMES</b> — Windows XP<br>Двойной клик — открыть игру.</div></div>
@@ -82,15 +100,16 @@
 <script src="games.js"></script>
 <script>
 function colorFor(n){var c=["#e91e63","#9c27b0","#3f51b5","#009688","#ff9800","#4caf50","#f44336","#2196f3","#795548","#607d8b"];var s=0;for(var i=0;i<n.length;i++)s+=n.charCodeAt(i);return c[s%c.length];}
-function builtinGames(){return [{name:"Волшебный сад",type:"builtin",color:"#7cb342",desc:"Кликер"},{name:"Steam Case Simulator",file:"steam-case.html",color:"#1b2838",desc:"Кейсы"}];}
+function builtinGames(){return []; /* НИКАКИХ встроенных игр — только games.js, иначе дубль + заглушка */}
 function loadGames(){var l=builtinGames();try{if(window.USER_GAMES&&window.USER_GAMES.length)l=l.concat(window.USER_GAMES);}catch(e){}return l;}
 function render(){var games=loadGames();window._games=games;var icons=document.getElementById("icons");icons.innerHTML="";games.forEach(function(g,i){var d=document.createElement("div");d.className="icon";d.innerHTML='<div class="logo" style="background:'+(g.color||colorFor(g.name))+'">'+g.name.trim()[0].toUpperCase()+'</div><span>'+g.name+'</span><small>'+(g.desc||"Игра")+'</small>';d.onclick=function(){document.querySelectorAll(".icon").forEach(function(x){x.classList.remove("selected")});d.classList.add("selected");if(window.matchMedia("(pointer:coarse)").matches){openGame(i);}};d.ondblclick=function(){openGame(i);};icons.appendChild(d);});var sm=document.getElementById("smGames");sm.innerHTML="";games.forEach(function(g,i){var r=document.createElement("div");r.className="smItem";r.innerHTML="🕹 <div><b>"+g.name+"</b><small>"+(g.desc||"Игра")+"</small></div>";r.onclick=function(){closeStart();openGame(i);};sm.appendChild(r);});}
-function openGame(i){var g=window._games[i];if(!g)return;var win=document.getElementById("gameWin");win.classList.add("open");document.getElementById("winTitle").textContent="🕹 "+g.name+" — MiniMrGAMES";document.getElementById("tasks").innerHTML='<button class="taskBtn">🕹 '+g.name+'</button>';var body=document.getElementById("winBody");if(g.type==="builtin"){body.innerHTML='<p style="padding:20px">Встроенная заглушка удалена. Игра должна лежать отдельным файлом, см. games.js</p>';}else if(g.content){var blob=new Blob([g.content],{type:"text/html"});body.innerHTML='<iframe src="'+URL.createObjectURL(blob)+'"></iframe>';}else if(g.file){body.innerHTML='<iframe src="'+encodeURI(g.file)+'"></iframe>';}else{body.innerHTML='<p style="padding:20px">Файл не найден: <b>'+(g.file||"")+'</b></p>';}}
+function openGame(i){var g=window._games[i];if(!g)return;var win=document.getElementById("gameWin");win.classList.add("open");document.getElementById("winTitle").textContent="🕹 "+g.name+" — MiniMrGAMES";document.getElementById("tasks").innerHTML='<button class="taskBtn">🕹 '+g.name+'</button>';var body=document.getElementById("winBody");if(g.content){var blob=new Blob([g.content],{type:"text/html"});body.innerHTML='<iframe src="'+URL.createObjectURL(blob)+'"></iframe>';}else if(g.file){body.innerHTML='<iframe src="'+encodeURI(g.file)+'"></iframe>';}else{body.innerHTML='<p style="padding:20px">Файл не найден: <b>'+(g.file||"")+'</b></p>';}}
 function closeWin(){document.getElementById("gameWin").classList.remove("open");document.getElementById("tasks").innerHTML="";}
 function toggleStart(){document.getElementById("startMenu").classList.toggle("open");}
 function closeStart(){document.getElementById("startMenu").classList.remove("open");}
 document.addEventListener("click",function(e){if(!e.target.closest("#startMenu")&&!e.target.closest("#startBtn"))closeStart();});
 function tick(){var d=new Date();document.getElementById("clockTime").textContent=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
 setInterval(tick,1000);tick();
+try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}
 render();
 </script></body></html>
