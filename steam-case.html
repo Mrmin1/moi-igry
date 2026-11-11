@@ -14,6 +14,37 @@ h1{color:#fff}h2{color:#fff}.muted{color:#8b929a}.cases{display:grid;grid-templa
 .ach{background:#16202d;border:1px solid #2a3f5a;padding:12px;margin-bottom:10px;border-radius:4px}.ach.done{border-color:#a4d007}.bar{height:8px;background:#1b2838;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#66c0f4}
 footer{padding:30px 0;color:#8b929a;text-align:center}.filter button{margin-right:6px}select{background:#16202d;color:#fff;border:1px solid #2a3f5a;padding:6px}
 @media(max-width:700px){.cases{grid-template-columns:1fr}nav{display:none}.result{flex-direction:column}.result img{width:100%}}
+
+/* ===== АДАПТИВ: ПК как ПК, телефон как телефон ===== */
+@media (max-width:768px){
+  header{height:auto;padding:12px 0}
+  header .wrap{flex-wrap:wrap;gap:8px}
+  nav{display:none}
+  .logo{font-size:24px}
+  .wallet{margin-left:0;width:100%;justify-content:space-between}
+  .bal{flex:1;text-align:center}
+  .sub{overflow-x:auto;white-space:nowrap}
+  .sub button{padding:10px 14px;font-size:14px;flex:0 0 auto}
+  /* Кейсы — один под другим, кнопка под палец */
+  .cases{grid-template-columns:1fr}
+  .open{padding:16px;font-size:16px;min-height:48px}
+  /* Карточки игр — 2 в ряд на телефоне */
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .card{width:100%!important;flex:0 0 auto}
+  .card-info b{font-size:12px}
+  /* Рулетка — карточки уже, трек не вылезает */
+  .strip{height:185px}
+  .result{flex-direction:column;padding:10px}
+  .result img{width:100%!important}
+  .result .btn,.btn{min-height:44px;font-size:15px}
+  h1{font-size:22px} h2{font-size:18px}
+  .filter{overflow-x:auto;white-space:nowrap;display:flex;gap:6px}
+  .filter button{flex:0 0 auto;padding:10px 12px}
+}
+@media (max-width:380px){
+  .grid{grid-template-columns:1fr}
+  .card-info b{font-size:14px}
+}
 </style></head><body>
 <header><div class="wrap" style="display:flex;align-items:center"><div class="logo">STEAM<span>.</span></div><nav><span>МАГАЗИН</span><span>БИБЛИОТЕКА</span><span>СООБЩЕСТВО</span></nav><div class="wallet"><div class="bal">🪙 <span id="balance">1000</span> монет</div><button class="btn" onclick="showTab('inv')">Инвентарь</button></div></div></header>
 <div style="background:#1a2a3a"><div class="wrap sub"><button id="t-cases" class="active" onclick="showTab('cases')">Кейсы</button><button id="t-inv" onclick="showTab('inv')">Инвентарь</button><button id="t-stat" onclick="showTab('stat')">Статистика</button><button id="t-ach" onclick="showTab('ach')">Достижения</button></div></div>
@@ -57,7 +88,7 @@ function openCase(type,price){
  track.innerHTML=items.map(cardHTML).join('');
  track.style.transition='none'; track.style.transform='translateX(0px)';
  requestAnimationFrame(function(){requestAnimationFrame(function(){
-   var cardW=250; var target=32*cardW - (document.querySelector('.strip').clientWidth/2 - 125);
+   var cardW = window.innerWidth<=768 ? (document.querySelector('.card')?document.querySelector('.card').offsetWidth+10:250) : 250; var target=32*cardW - (document.querySelector('.strip').clientWidth/2 - 125);
    track.style.transition='transform 4s cubic-bezier(0.1,0.9,0.2,1)'; track.style.transform='translateX(-'+target+'px)';
    setTimeout(function(){
      state.inv.push(win); state.last=win; save(); update(); spinning=false;
